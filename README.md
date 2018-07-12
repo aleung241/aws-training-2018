@@ -8,6 +8,8 @@
 |IAM|S3|EC2
 |Route53|VPC|ELastic Block Store (EBS)
 | |Internet Gateway|Subnet
+| |SQS| |
+| |DynamoDB| |
 
 #### Regions
 - Data is regionally scoped - a region is a boundary for data
@@ -62,8 +64,9 @@ e.g. RDS
 -	Intrusion protection 
 -	Separation of access 
 
-## Module 2 - Core Services
 
+
+## Module 2 - Core Services
 ### Networking
 #### Virtual Private Cloud (VPC)
 - This is like a container
@@ -172,8 +175,9 @@ One-zone infrequent access
 - Used for scale and performance
 - No relationships
 
-## Module 3 - Designing your environment
 
+
+## Module 3 - Designing your environment
 #### How to choose region?
 - Cost
 - Ping it from your current location! [Cloudping](cloudping.info)  
@@ -211,6 +215,8 @@ One-zone infrequent access
 - Use route tables to peer between VPCs
 - Complete routing control
 
+
+
 ## Module 4 - Making your environment available
 #### High availability
 - Any component can suffer loss
@@ -229,9 +235,13 @@ One-zone infrequent access
 - Understand where the bottlenecks are
 - CloudWatch Alarms measure a SINGLE metric and performs actions
 
+
+
 ## Module 5 - Event Driven Scaling
 #### Scaling with RDS
 - Database sharding - breaking up databases into smaller ones
+
+
 
 ## Module 6 - Automating your infrastructure
 - Getting rid of manual stuff
@@ -248,3 +258,84 @@ One-zone infrequent access
 #### Organising templates
 - Think about optimal reusage
 - Metadata allows configuration information for later use
+
+
+## Module 7 - Decoupling your infrastructure
+Design architectures with independent components - change or failure of 1 will not affect others
+
+#### Strategies
+- Managed services and serverless - reliability and efficiency
+- Message queues instead of applications communicating directly
+- Use S3
+
+#### Microservices
+- Each process does one task
+- Language-agnostic APIs leveraging JSON/REST
+- Split features into individual components - smaller parts to iterate on
+- Get reduced test surface area
+- Every component can scale horizontally, more highly available, reduced cost
+
+### Best practices
+- Change components without breaking them - should not affect consumers, interface is a contract
+- Use a simple API - lower cost, can hide details, less breakage, less resistant to change
+- Keep it technology-agnostic - be ready for change
+- Design with failure in mind - They WILL happen. They rarely happen during testing unless you force it, so be careful. [Simian Army](https://github.com/Netflix/SimianArmy)
+- Monitor your environment, not just your infrastructure
+- Treat servers as stateless - interchangeable members of the group. Have enough capacity to handle workload. Use auto scaling
+
+---
+
+### SQS
+- First service AWS released. 2006
+- Communication between components
+- Fully managed message queueing service
+- Any volume at any level of throughput
+
+#### Standard SQS
+- Scalable
+- Simultaneous read/write
+- Secure - requires API credentials
+- Cannot guarantee no duplicates or order
+
+
+- Visibility timeout prevents multiple components from processing the same message
+- Message gets picked up, then locks, then deletes once processed
+
+#### Use cases
+- Work queues
+- Buffering batch operations
+- Request offloading
+- Fan-out
+- Auto scaling
+
+---
+
+### SNS
+- set up, operate, send notifications
+- Create topic, can have subscribers. Push message to topic that distributes to all subscribers
+- Single published message
+- Order not guaranteed
+- No recall
+- HTTP/HTTPS retry
+- 256KB max per message
+
+################Get table from notes##################
+
+#### Amazon MQ
+
+#### DynamoDB
+- Storig and retrieving processing output with high throughput
+- Highly available
+- Fault Tolerant
+- Fully managed
+
+#### API Gateway
+- Fully managed
+- Can throttle
+
+#### Lambda
+- processing data with high availability, less cost
+
+
+
+## Module 8 - Designing Web-Scale Storage
