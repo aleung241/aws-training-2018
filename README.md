@@ -1,6 +1,6 @@
 # AWS Training 2018
 
-##Module 1: Core AWS Knowledge
+## Module 1 - Core AWS Knowledge
 
 ### Scopes
 |Global|Regional|AZ|
@@ -11,9 +11,6 @@
 
 #### Regions
 - Data is regionally scoped - a region is a boundary for data
-  
-[Cloudping](cloudping.info) to see pings for different regions relative to yourself  
-
 - Edge locations for globally scoped services
 - AZ scoped services require you to make highly available - single points of failure
 - Two or more AZ's
@@ -36,6 +33,8 @@
 - Interconnected with other AZ's using high-speed private links
 - AWS recommends replicating AZ's for resilience
 
+---
+
 ### Unmanaged vs Managed Services
 #### Unmanaged
 
@@ -51,7 +50,7 @@ e.g. RDS
 
 ---
 
-####Security Responsibilities
+#### Security Responsibilities
 -	Physical security, control, need-based access
 -	Data centre locations are usually hidden
 -	Infrastructure, knowing when it will fail 
@@ -63,21 +62,27 @@ e.g. RDS
 -	Intrusion protection 
 -	Separation of access 
 
-## Module 2: Core Services
+## Module 2 - Core Services
 
 ### Networking
-#### VPC
+#### Virtual Private Cloud (VPC)
+- This is like a container
 - Regionally scoped
 - VPC is not a data center replacement
 - VPC is a singularly logical isolated network
 - 1 VPC can only have 1 Internet Gateway
 
 #### Subnet
+- Can be used to limit access to/from VPCs
 - Each subnet must have its own CIDR block. They cannot overlap
 - Only one route table associated per subnet
+- Public subnets can send outbound traffic directly to internet
+- Private subnets must do so through a NAT gateway sitting in the public subnet
 
 #### Elastic IP
 - Public IP that is statically assigned
+- Associated with your AWS account
+- Can mask failure of an instance by remapping the address to another instance
 
 #### Security Groups
 - App level protection
@@ -89,6 +94,8 @@ e.g. RDS
 - Explicit blacklisting option available
 
 #### NAT
+- Like a bastian host sitting in public subnet
+- Allows private instances outgoing connectivity to internet, while blocking inbound traffic from internet
 - Indirect internet access
 - Useful for hiding machines
 
@@ -151,6 +158,8 @@ One-zone infrequent access
 - Groups!
 - Policies can be attached to groups, users or roles
 
+---
+
 ### Databases
 #### RDS
 - Managed service
@@ -163,17 +172,79 @@ One-zone infrequent access
 - Used for scale and performance
 - No relationships
 
-## Module 3: Designing your environment
+## Module 3 - Designing your environment
 
+#### How to choose region?
+- Cost
+- Ping it from your current location! [Cloudping](cloudping.info)  
+- 5 VPCs per region default
+- VPCs are regional
 
+#### How many AZs to use?
+- There are 3 in Sydney
+- Don't need to use all of them
+- Best practice - start with 2 AZs
 
+#### Directing traffic
+- Every subnet can have a route table, not multiple route tables per subnet
+- Use custom route tables!
+- Remember that server restarts result in IP address changes
 
+#### Security Groups
+- Assign addresses and control traffic. Can assign rules to group
+- Can allow traffic from certain load balancers
+- Allow complete control of packet routing through different tiers
 
+#### Network Access Control Lists (ACL)
+- Subnet level protection
+- Contol in and out traffic
+- Optional firewalls
 
+#### Logging VPC traffic
+- Uhh...can be done. Yeah...
 
-## CF Parameters
-- Allow human interaction
-- Constraintdescrition - error message
+#### VPC peering
+- Route traffic between peered VPCs
+- Peering must be direct. Cannot flow through other peers
+- Scalable
+- Needs permissions to both VPCs to make and accept requests to pass packets between them
+- Use route tables to peer between VPCs
+- Complete routing control
 
-Ref goes to parameter  
-Auto rollback can be changed to be manually fixed
+## Module 4 - Making your environment available
+#### High availability
+- Any component can suffer loss
+- Ensuring downtime is minimised without human intervention
+- More hardware required for more availability
+
+#### Avoid single points of failure
+- Consider EVERY component
+- HAVE A SECONDARY BACKUP!
+
+#### Amazon CloudWatch
+- Monitors your instances
+- Polls every minute (can be adjusted)
+- Understand when things are nearing capacity
+- YOU must specify what to monitor
+- Understand where the bottlenecks are
+- CloudWatch Alarms measure a SINGLE metric and performs actions
+
+## Module 5 - Event Driven Scaling
+#### Scaling with RDS
+- Database sharding - breaking up databases into smaller ones
+
+## Module 6 - Automating your infrastructure
+- Getting rid of manual stuff
+- We want the system to self deploy and monitor
+- Infrastructure as code
+
+#### CloudFormation
+- JSON templates
+- Creates resource stacks
+- Launch, configure and update AWS resources
+- Each fail rolls back by default, but can be changed to allow a human to manually fix instead
+- Log events
+
+#### Organising templates
+- Think about optimal reusage
+- Metadata allows configuration information for later use
