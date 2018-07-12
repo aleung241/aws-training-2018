@@ -37,7 +37,6 @@
 - AWS recommends replicating AZ's for resilience
 
 ### Unmanaged vs Managed Services
-
 #### Unmanaged
 
 a.k.a. Self-managed  
@@ -66,10 +65,34 @@ e.g. RDS
 
 ## Module 2: Core Services
 
-#### Networking
+### Networking
+#### VPC
+- Regionally scoped
 - VPC is not a data center replacement
 - VPC is a singularly logical isolated network
-- Public vs private, indirect access
+- 1 VPC can only have 1 Internet Gateway
+
+#### Subnet
+- Each subnet must have its own CIDR block. They cannot overlap
+- Only one route table associated per subnet
+
+#### Elastic IP
+- Public IP that is statically assigned
+
+#### Security Groups
+- App level protection
+- No blacklisting option available. Default behaviour is to block already
+- You can open ports on other security groups in case IP changes
+|
+#### NACL
+- Subnet level protection
+- Explicit blacklisting option available
+
+#### NAT
+- Indirect internet access
+- Useful for hiding machines
+
+---
 
 #### EC2
 - Virtual machines
@@ -99,7 +122,6 @@ Used to create EC2 instances
 ---
 
 ### Storage
-
 #### S3 (Simple Storage Service)
 - Scalable, reliable, fast, durable
 - Not a file system
@@ -119,6 +141,8 @@ One-zone infrequent access
 #### Elastic Block Store (EBS)
 - Snapshots stored in S3, regionally scoped due to S3 duplication
 
+---
+
 #### IAM
 **Delete root access keys right after sign up!**
 - Identity user management
@@ -127,32 +151,7 @@ One-zone infrequent access
 - Groups!
 - Policies can be attached to groups, users or roles
 
-#### VPC
-- Regionally scoped
-- 1 VPC can only have 1 Internet Gateway
-
-#### Subnet
-- Each subnet must have its own CIDR block. They cannot overlap
-- Only one route table associated per subnet
-
-#### Elastic IP
-- Public IP that is statically assigned
-
-#### Security Groups
-- App level protection
-- No blacklisting option available. Default behaviour is to block already
-- You can open ports on other security groups in case IP changes
-|
-#### NACL
-- Subnet level protection
-- Explicit blacklisting option available
-
-#### NAT
-- Indirect internet access
-- Useful for hiding machines
-
 ### Databases
-
 #### RDS
 - Managed service
 - Relational DBs
@@ -164,6 +163,7 @@ One-zone infrequent access
 - Used for scale and performance
 - No relationships
 
+## Module 3: Designing your environment
 
 
 
