@@ -7,7 +7,7 @@
 |:---:|:---:|:---:|
 |IAM|S3|EC2
 |Route53|VPC|ELastic Block Store (EBS)
-| |Internet Gateway|Subnet
+|CloudFront|Internet Gateway|Subnet
 | |SQS| |
 | |DynamoDB| |
 
@@ -160,6 +160,7 @@ One-zone infrequent access
 - Can create temporary credentials to a user to assume a role
 - Groups!
 - Policies can be attached to groups, users or roles
+- 5000 users per account
 
 ---
 
@@ -339,3 +340,5 @@ Design architectures with independent components - change or failure of 1 will n
 
 
 ## Module 8 - Designing Web-Scale Storage
+- Store static content in S3
+
