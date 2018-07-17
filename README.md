@@ -20,7 +20,6 @@
 - YOU enable and control data replication across regions
 - Communication between regions uses AWS backbone connections but not guaranteed
 
-
 *Multi region use cases: Netflix*
 
 #### AWS Datacenters
@@ -33,7 +32,7 @@
 - Made of one or more data centers
 - Designed for fault isolation
 - Interconnected with other AZ's using high-speed private links
-- AWS recommends replicating AZ's for resilience
+- AWS recommends replicating AZ's for resilience (ability to recover from failures quickly)
 
 ---
 
@@ -41,27 +40,29 @@
 #### Unmanaged
 
 a.k.a. Self-managed  
-- Scaling, fault tolderance, and availability are managed by YOU. AWS does not do this for you
+- Scaling, fault tolerance, and availability are managed by YOU. AWS does not do this for you. Go replace your own unhealthy instances
+- More fine tuned control
 
 *e.g. EC2*
 
 #### Managed
-Typically built into the service. These are fully managed by AWS
+- Typically built into the service. These are fully managed by AWS
 
-e.g. RDS
+e.g. RDS, S3
 
 ---
 
 #### Security Responsibilities
--	Physical security, control, need-based access
--	Data centre locations are usually hidden
--	Infrastructure, knowing when it will fail 
--	Network infrastructure, intrusion detection. Can’t test own security or will be deemed as an attack.
--	Virtualisation infrastructure, hardware is dedicated to your instance 
--	Patch and maintain your OWN operating systems, AWS does not provide the service 
+##### AWS will do:
+-	Physical security - Controlled need-based access. Data centre locations are usually hidden. 24/7 guards, 2FA, disk degaussing/destruction
+-	Infrastructure, knowing when it will fail, storage decommissioning, host OS patching (AMIs)
+-	Network infrastructure, intrusion detection, routers, switches, cabling, etc
+
+##### Do this yourself:
+-	Patch and maintain your OWN instance operating systems, AWS does not provide the service 
 -	Think about user positions and role base access 
 -	Security groups 
--	Intrusion protection 
+-	OS firewalls, intrusion protection 
 -	Separation of access 
 
 
@@ -70,10 +71,11 @@ e.g. RDS
 ### Networking
 #### Virtual Private Cloud (VPC)
 - This is like a container
-- Regionally scoped
 - VPC is not a data center replacement
-- VPC is a singularly logical isolated network
+- VPC is a singularly logical isolated virtual network
 - 1 VPC can only have 1 Internet Gateway
+- Put all your stuff like EC2 instances into VPCs
+- Can configure your own IP ranges, routing, network gateways, security settings
 
 #### Subnet
 - Can be used to limit access to/from VPCs
@@ -106,14 +108,15 @@ e.g. RDS
 
 #### EC2
 - Virtual machines
-- Placement groups: logical goruping of machines
+- Xeon processors :D
+- Placement groups: logical grouping of machines
 - Instance storage is ephemeral. Shut downs clear it. Reboots keep it. 
 - A shutdown then startup will spin up a new instance, clearing instance storage  
 - Hardware is isolated to your instance except the T2 instance type. T2 is shared hardware  
 
 Low/Moderate/High - Placement group - logical grouping of machines
 
-Spot instances - choose highest price to continue using the machine. Imagine an auction?
+Spot instances - choose highest price you're willing to pay to continue using the machine. Hibernation
 
 **Careful! Giving full access to EC2 allows access to VPCs**
 
@@ -134,22 +137,41 @@ Used to create EC2 instances
 ### Storage
 #### S3 (Simple Storage Service)
 - Scalable, reliable, fast, durable
-- Not a file system
-- Object based storage
-- 5TB per object
+- 99.99% availability, 99.999999999% durability. Damn good
+- Not a file system - object level storage
+- 5TB per object, unlimited objects
 - Global Unique. No need for arn to specify region
+- Object PUT or DELETE can trigger notifications, workflows and scripts
+- Data can be encrypted automatically
+- S3 Analytics to use storage access patterns and move the right data to the right storage class
+- Verifies using checksums
+- Retrieve and restore every object's version
+- Only read-after-write is consistent due to data being spread across places
 
-One-zone infrequent access
+Infrequent access
+- Minimum 30 day storage
 - Less availability
 - Used for backups
 - Really new storage type offer
+- Higher cost per request
+- Standard-IA (SIA) redundantly across multiple AZ, One Zone-IA 20% cheaper than SIA, but only 1 AZ
 
 #### Elastic File System (EFS)
-- Shared storage
-- Expose and mount
+- Shared file storage
+- Expose and mount via mount targets in appropriate subnets. Must be in same VPC
+- Elastic. Petabyte scale
+- Thousands of EC2 instances can access a single EFS without performance impact
 
 #### Elastic Block Store (EBS)
+- Block level storage as opposed to S3's object level storage
+- Faster, but more costly than object level storage
+- Attaches directly to EC2 instances
 - Snapshots stored in S3, regionally scoped due to S3 duplication
+
+#### Glacier
+- 99.999999999% durability
+- Data archiving. Security, durability and VERY low cost
+- SSL/TLS in transit and rest
 
 ---
 
@@ -180,10 +202,10 @@ One-zone infrequent access
 
 ## Module 3 - Designing your environment
 #### How to choose region?
+- Data sovereignty and compliance. Laws, etc
+- Service and feature availability
 - Cost
 - Ping it from your current location! [Cloudping](cloudping.info)  
-- 5 VPCs per region default
-- VPCs are regional
 
 #### How many AZs to use?
 - There are 3 in Sydney
