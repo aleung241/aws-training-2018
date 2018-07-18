@@ -1,5 +1,7 @@
 # AWS Training 2018
   
+## Contents
+
 [Module 1 - Core AWS Knowledge](#module-1---core-aws-knowledge)  
 - [Scopes](#scopes)
 - [Regions](#regions)
@@ -54,6 +56,7 @@
 
 [Module 8 - Designing Web-Scale Storage](#module-8---designing-web-scale-storage)
 
+---
 
 ## Module 1 - Core AWS Knowledge
 
@@ -259,7 +262,7 @@ Infrequent access
 - Data sovereignty and compliance. Laws, etc
 - Service and feature availability
 - Cost
-- Ping it from your current location! [Cloudping](cloudping.info)  
+- Ping it from your current location! [Cloudping](http://cloudping.info)  
 
 #### How many AZs to use?
 - There are 3 in Sydney
