@@ -1,7 +1,59 @@
 # AWS Training 2018
   
 [Module 1 - Core AWS Knowledge](#module-1---core-aws-knowledge)  
-[Module 2 - Core Services](#module-2---core-services)
+- [Scopes](#scopes)
+- [Regions](#regions)
+- [AWS Datacenters](#aws-datacenters)
+- [Availability Zones](#availability-zones)
+- [Managed vs Unmanaged Services](#unmanaged-vs-managed-services)
+    - [Unmanaged](#unmanaged)
+    - [Managed](#managed)
+- [Security Responsibilities](#security-responsibilities)
+
+[Module 2 - Core Services](#module-2---core-services)  
+- [Virtual Private Cloud (VPC)](#virtual-private-cloud-(vpc))
+- [Subnet](#subnet)
+- [Elastic IP](#elastic-ip)
+- [Security Groups](#security-groups)
+- [Network ACL](#nacl)
+- [NAT](#nat)
+- [EC2](#ec2)
+- [Tags](#tags)
+- [Simple Storage Service (S3)](#simple-storage-service-(s3))
+- [Elastic File System (EFS)](#elastic-file-system-(efs))
+- [Elastic Block Store (EBS)](#elastic-block-store-(ebs))
+- [Glacier](#glacier)
+- [Identity Access Management (IAM)](#identity-access-management-(iam))
+- [Relational Database Service (RDS)](#scopes)
+- [DynamoDB](#dynamodb)
+
+[Module 3 - Designing your environment](#module-3---designing-your-environment)  
+- [How to choose a region?](#how-to-choose-a-region?)
+- [How many AZs to use](#how-many-azs-to-use?)
+- [Directing traffic](#directing-traffic)
+- [Security Groups](#security-groups)
+- [Network Access Control Lists (NACL)](#network-access-control-lists-(acl))
+- [Logging VPC traffic](#logging-vpc-traffic)
+- [VPC peering](#vpc-peering)
+
+[Module 4 - Making your environment available](#module-4---making-your-environment-available)  
+- [High Availability](#high-availability)
+- [Avoid single points of failure](#avoid-single-points-of-failure)
+- [Elastic Load Balancing (ELB)](#elastic-load-balancing-(elb))
+- [Route 53](#route-53)
+
+[Module 5 - Event Driven Scaling](#module-5---event-driven-scaling)  
+- [Amazon CloudWatch](#amazon-cloudwatch)
+- [CloudWatch Logs](#cloudwatch-logs)
+- [Auto Scaling](#auto-scaling)
+- [Scaling with RDS](#scaling-with-rds)
+
+[Module 6 - Automating your infrastructure](#module-6---automating-your-infrastructure)  
+
+[Module 7 - Decoupling your infrastructure](#module-7---decoupling-your-infrastructure)  
+
+[Module 8 - Designing Web-Scale Storage](#module-8---designing-web-scale-storage)
+
 
 ## Module 1 - Core AWS Knowledge
 
@@ -124,8 +176,7 @@ Spot instances - choose highest price you're willing to pay to continue using th
 **Careful! Giving full access to EC2 allows access to VPCs**
 
 #### Amazon Machine Image
-
-Used to create EC2 instances
+- Used to create EC2 instances
 
 ---
 
@@ -138,7 +189,7 @@ Used to create EC2 instances
 ---
 
 ### Storage
-#### S3 (Simple Storage Service)
+#### Simple Storage Service (S3)
 - Scalable, reliable, fast, durable
 - 99.99% availability, 99.999999999% durability. Damn good
 - Not a file system - object level storage
@@ -178,7 +229,7 @@ Infrequent access
 
 ---
 
-#### IAM
+#### Identity Access Management (IAM)
 **Delete root access keys right after sign up!**
 - Identity user management
 - Access keys for APIs
@@ -190,7 +241,7 @@ Infrequent access
 ---
 
 ### Databases
-#### RDS
+#### Relational Database Service (RDS)
 - Managed service
 - Relational DBs
 - Do not use for massive read/write rates
@@ -204,7 +255,7 @@ Infrequent access
 
 
 ## Module 3 - Designing your environment
-#### How to choose region?
+#### How to choose a region?
 - Data sovereignty and compliance. Laws, etc
 - Service and feature availability
 - Cost
