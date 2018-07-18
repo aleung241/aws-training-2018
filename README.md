@@ -250,6 +250,8 @@ Infrequent access
 - Consider EVERY component
 - HAVE A SECONDARY BACKUP!
 
+---
+
 #### Elastic Load Balancing (ELB)
 - Distributes incoming application traffic across multiple EC2 instances, containers or IP addresses
 - Responds to unhealthy instances
@@ -263,6 +265,14 @@ Infrequent access
 - DNS failovers via health checks
 - Simple routing, weighted round robin, latency-based routing, geolocation, geoproximity available
 
+
+
+
+## Module 5 - Event Driven Scaling
+- Enable scaling!
+- Scale up - better specs
+- Scale out - more instances
+
 #### Amazon CloudWatch
 - Monitors your instances
 - Polls every minute (can be adjusted)
@@ -271,11 +281,24 @@ Infrequent access
 - Understand where the bottlenecks are
 - CloudWatch Alarms measure a SINGLE metric and performs actions
 
+#### CloudWatch Logs
+- Can be stored in S3 for other services or users to access
+- Can be streamed in real time to Kinesis Streams or Lambda and others
 
+---
 
-## Module 5 - Event Driven Scaling
+#### Auto Scaling
+- Launch/terminate instances based on conditions
+- Registers new instances with LBs when specified
+- Can launch across AZs
+- CloudWatch Alarms can trigger an auto scaling policy
+- Scale out early, scale in slowly. Avoid aggressive instance termination
+
 #### Scaling with RDS
-- Database sharding - breaking up databases into smaller ones
+- ElastiCache for Memcached or Redis, or use your own self-managed caching solution
+- Database sharding - breaking up databases into smaller ones. Higher performance and better operating efficiency
+- Horizontal scaling with read replicas for read heavy workloads
+- Vertical scaling often with no downtime
 
 
 
@@ -330,7 +353,7 @@ Design architectures with independent components - change or failure of 1 will n
 #### Standard SQS
 - Scalable
 - Simultaneous read/write
-- Secure - requires API credentials
+- Secure - requires API credentialshttps://www.macleans.school.nz/student/school-information/staff-directory
 - Cannot guarantee no duplicates or order
 
 
