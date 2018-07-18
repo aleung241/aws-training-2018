@@ -17,7 +17,8 @@
 - [Subnet](#subnet)
 - [Elastic IP](#elastic-ip)
 - [Security Groups](#security-groups)
-- [Network ACL](#nacl)
+- [Network Access Control Lists (NACL)](#network-access-control-lists-(nacl))
+- [Internet Gateway](#internet-gateway)
 - [NAT](#nat)
 - [EC2](#ec2)
 - [Tags](#tags)
@@ -33,8 +34,6 @@
 - [How to choose a region?](#how-to-choose-a-region?)
 - [How many AZs to use](#how-many-azs-to-use?)
 - [Directing traffic](#directing-traffic)
-- [Security Groups](#security-groups)
-- [Network Access Control Lists (NACL)](#network-access-control-lists-(acl))
 - [Logging VPC traffic](#logging-vpc-traffic)
 - [VPC peering](#vpc-peering)
 
@@ -60,6 +59,8 @@
 
 ## Module 1 - Core AWS Knowledge
 
+# "Everything fails, all the time" - Werner Vogels, CTO, Amazon.com
+
 ### Scopes
 |Global|Regional|AZ|
 |:---:|:---:|:---:|
@@ -68,6 +69,10 @@
 |CloudFront|Internet Gateway|Subnet
 | |SQS| |
 | |DynamoDB| |
+| |ELC| |
+| |AMI| |
+| |SQS| |
+| |IGW| |
 
 #### Regions
 - Data is regionally scoped - a region is a boundary for data
@@ -136,11 +141,13 @@ e.g. RDS, S3
 - Can configure your own IP ranges, routing, network gateways, security settings
 
 #### Subnet
+- Partitions of a network divided by CIDR range
 - Can be used to limit access to/from VPCs
-- Each subnet must have its own CIDR block. They cannot overlap
+- Each subnet must have its own CIDR block. They cannot overlap. Every step up of CIDR range halves the available IPs
 - Only one route table associated per subnet
-- Public subnets can send outbound traffic directly to internet
-- Private subnets must do so through a NAT gateway sitting in the public subnet
+- Public subnets can talk directly to internet via a routing table entry to an IGW
+- Private subnets do not have this routing table entry. Use a jump box (NAT/Proxy/bastion host) to send *outbound* to internet
+- Protected subnets do not talk to internet at all, direct or indirect
 
 #### Elastic IP
 - Public IP that is statically assigned
@@ -149,12 +156,19 @@ e.g. RDS, S3
 
 #### Security Groups
 - App level protection
+- Default allow all outbound traffic. Changing this will increase complexity. Not recommended
 - No blacklisting option available. Default behaviour is to block already
 - You can open ports on other security groups in case IP changes
-|
-#### NACL
+
+#### Network Access Control Lists (NACL)
 - Subnet level protection
+- Optional virtual firewalls for subnet traffic
+- Stateless
 - Explicit blacklisting option available
+
+#### Internet Gateway
+- Allow communication between instances in VPC and internets by attaching to VPC
+- AWS managed
 
 #### NAT
 - Like a bastian host sitting in public subnet
@@ -274,22 +288,14 @@ Infrequent access
 - Use custom route tables!
 - Remember that server restarts result in IP address changes
 
-#### Security Groups
-- Assign addresses and control traffic. Can assign rules to group
-- Can allow traffic from certain load balancers
-- Allow complete control of packet routing through different tiers
-
-#### Network Access Control Lists (ACL)
-- Subnet level protection
-- Contol in and out traffic
-- Optional firewalls
-
 #### Logging VPC traffic
-- Uhh...can be done. Yeah...
+- VPC flow logs are published to CloudWatch Logs
+- Can enable for VPCs, subnets and ENIs (Elastic Network Interface)
 
-#### VPC peering
-- Route traffic between peered VPCs
+#### Connecting VPCs
+- Use VPC peering. Route traffic between peered VPCs
 - Peering must be direct. Cannot flow through other peers
+- No IGW or virtual GW required. No single point of failure
 - Scalable
 - Needs permissions to both VPCs to make and accept requests to pass packets between them
 - Use route tables to peer between VPCs
@@ -302,6 +308,27 @@ Infrequent access
 - Any component can suffer loss
 - Ensuring downtime is minimised without human intervention
 - More hardware required for more availability
+- Multi-region will increase cost, availability and complexity. Go for one region unless more is required
+- If using one region, go for multi-AZ for HA
+
+|Inherently HA|HA with the right architecture|
+|:---:|:---:|
+|S3 and Glacier|EC2|
+|DynamoDB|VPC|
+|CloudFront|Redshift|
+|SQS|ElastiCache|
+|SNS|DirectConnect|
+|SES|
+|Route53|
+|ELB|
+|IAM|
+|CloudWatch|
+|Auto Scaling|
+|EFS|
+|CloudFormation|
+|Lambda|
+|EBS|
+|RDS|
 
 #### Avoid single points of failure
 - Consider EVERY component
@@ -410,7 +437,7 @@ Design architectures with independent components - change or failure of 1 will n
 #### Standard SQS
 - Scalable
 - Simultaneous read/write
-- Secure - requires API credentialshttps://www.macleans.school.nz/student/school-information/staff-directory
+- Secure - requires API credentials
 - Cannot guarantee no duplicates or order
 
 
@@ -440,7 +467,7 @@ Design architectures with independent components - change or failure of 1 will n
 #### Amazon MQ
 
 #### DynamoDB
-- Storig and retrieving processing output with high throughput
+- Storing and retrieving processing output with high throughput
 - Highly available
 - Fault Tolerant
 - Fully managed
