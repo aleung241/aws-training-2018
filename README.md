@@ -250,6 +250,19 @@ Infrequent access
 - Consider EVERY component
 - HAVE A SECONDARY BACKUP!
 
+#### Elastic Load Balancing (ELB)
+- Distributes incoming application traffic across multiple EC2 instances, containers or IP addresses
+- Responds to unhealthy instances
+- Application LB functioning at 7th layer. HTTP/HTTPS. Applications running inside EC2 instances, etc
+- Network LB functioning at 4th layer (connection level). TCP. Super performance, same AZ routing 
+- Connection draining to let back end instances to finish off requests before deregister
+
+#### Route 53
+- DNS (translates domain names into IP addresses)
+- Nice domain names
+- DNS failovers via health checks
+- Simple routing, weighted round robin, latency-based routing, geolocation, geoproximity available
+
 #### Amazon CloudWatch
 - Monitors your instances
 - Polls every minute (can be adjusted)
