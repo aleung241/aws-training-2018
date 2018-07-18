@@ -1,4 +1,7 @@
 # AWS Training 2018
+  
+[Module 1 - Core AWS Knowledge](#module-1---core-aws-knowledge)  
+[Module 2 - Core Services](#module-2---core-services)
 
 ## Module 1 - Core AWS Knowledge
 
